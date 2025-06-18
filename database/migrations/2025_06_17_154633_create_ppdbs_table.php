@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('ppdbs', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->enum('jurusan', ['DPB', 'TKJ', 'TBSM']);
+            $table->string('nama');
+            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->string('nisn', 12);
+            $table->string('nik', 16);
+            $table->string('asal_sekolah');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->text('alamat');
+            $table->enum('kks', ['Ya', 'Tidak']);
+            $table->enum('kps', ['Ya', 'Tidak']);
+            $table->enum('kip', ['Ya', 'Tidak']);
+            $table->string('wa', 15);
+            $table->string('wa_ortu', 15)->nullable();
+            $table->string('nama_ayah');
+            $table->string('nama_ibu');
+            $table->string('nama_wali')->nullable();
+
+            $table->date('jadwal_test')->nullable(); // tanggal ujian tes
+            $table->tinyInteger('hasil_test')->default(0); // 0 = belum test, 1 = lulus, 2 = tidak lulus
+            $table->boolean('status_daftar_ulang')->default(0); // 0 = belum, 1 = sudah
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('ppdbs');
+    }
+};
