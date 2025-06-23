@@ -26,7 +26,7 @@
     </div>
     <div class="modal fade" id="modalJadwalTes" tabindex="-1">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('admin.update.jadwal') }}">
+            <form method="POST" action="{{ route('admin.update-jadwal') }}">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" id="jadwal_id">
@@ -48,7 +48,7 @@
     <!-- Modal: Hasil Tes -->
     <div class="modal fade" id="modalHasilTes" tabindex="-1">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('admin.update.hasil') }}">
+            <form method="POST" action="{{ route('admin.update-hasil') }}">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" id="hasil_id">
@@ -74,7 +74,7 @@
     <!-- Modal: Daftar Ulang -->
     <div class="modal fade" id="modalDaftarUlang" tabindex="-1">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('admin.update.daftarulang') }}">
+            <form method="POST" action="{{ route('admin.update-daftarulang') }}">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" id="daftar_id">

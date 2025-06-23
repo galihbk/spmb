@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/persyaratan', [HomeController::class, 'persyaratan'])->name('persyaratan');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,11 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/pendaftar', [AdminController::class, 'index'])->name('admin.pendaftar');
     Route::get('/admin/data', [AdminController::class, 'data'])->name('admin.data');
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
-    Route::get('/admin/{id}/detail', [AdminController::class, 'show'])->name('admin.detail');
-    Route::put('/admin/update-jadwal', [AdminController::class, 'updateJadwal'])->name('admin.update.jadwal');
-    Route::put('/admin/update-hasil', [AdminController::class, 'updateHasil'])->name('admin.update.hasil');
-    Route::put('/admin/update-daftarulang', [AdminController::class, 'updateDaftarUlang'])->name('admin.update.daftarulang');
+    // Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
+    Route::get('/admin/detail/{id}', [AdminController::class, 'show'])->name('admin.detail');
+    Route::put('/admin/update-jadwal', [AdminController::class, 'updateJadwal'])->name('admin.update-jadwal');
+    Route::put('/admin/update-hasil', [AdminController::class, 'updateHasil'])->name('admin.update-hasil');
+    Route::put('/admin/update-daftarulang', [AdminController::class, 'updateDaftarUlang'])->name('admin.update-daftarulang');
 });
 
 require __DIR__ . '/auth.php';

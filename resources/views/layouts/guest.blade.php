@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--favicon-->
-    <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+    <link rel="icon" href="assets/images/logo-icon.png" type="image/png" />
     <!--plugins-->
     <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
     <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
@@ -53,26 +53,24 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('home') }}">
+                    <a href="{{ route('persyaratan') }}">
                         <div class="parent-icon"><i class='bx bx-home-circle'></i>
                         </div>
                         <div class="menu-title">Persyaratan</div>
                     </a>
                 </li>
-                @if (auth()->user()->role === 'admin')
+                @if (auth()->check() && auth()->user()->role === 'admin')
                     <li>
                         <a href="{{ route('admin.pendaftar') }}">
-                            <div class="parent-icon"><i class='bx bx-list-ol'></i>
-                            </div>
+                            <div class="parent-icon"><i class='bx bx-list-ol'></i></div>
                             <div class="menu-title">Pendaftar</div>
                         </a>
                     </li>
                 @else
                     <li>
                         <a href="{{ route('form-ppdb') }}">
-                            <div class="parent-icon"><i class='bx bx-user-pin'></i>
-                            </div>
-                            <div class="menu-title">Daftar PPBD</div>
+                            <div class="parent-icon"><i class='bx bx-user-pin'></i></div>
+                            <div class="menu-title">Daftar PPDB</div>
                         </a>
                     </li>
                 @endif
@@ -104,6 +102,9 @@
                     <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
                     </div>
                     <div class="search-bar flex-grow-1">
+                        <div>
+                            <h6>PPDB SMK Al Huda Bumiayu</h6>
+                        </div>
                         <div class="position-relative search-bar-box" style="display: none">
                             <input type="text" class="form-control search-control" placeholder="Type to search...">
                             <span class="position-absolute top-50 search-show translate-middle-y"><i
@@ -114,7 +115,7 @@
                     </div>
                     <div class="top-menu ms-auto">
                         <ul class="navbar-nav align-items-center">
-                            <li class="nav-item mobile-search-icon">
+                            <li class="nav-item mobile-search-icon" style="display:none;">
                                 <a class="nav-link" href="#"> <i class='bx bx-search'></i>
                                 </a>
                             </li>

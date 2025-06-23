@@ -29,4 +29,9 @@ class HomeController extends Controller
             'totalBelumSelesai'
         ));
     }
+
+    public function persyaratan()
+    {
+        return view('home.persyaratan');
+    }
 }
