@@ -59,6 +59,7 @@
                         <div class="menu-title">Persyaratan</div>
                     </a>
                 </li>
+
                 @if (auth()->check() && auth()->user()->role === 'admin')
                     <li>
                         <a href="{{ route('admin.pendaftar') }}">
@@ -93,7 +94,13 @@
                         </a>
                     </li>
                 @endauth
-
+                <li>
+                    <a href="{{ route('faq') }}">
+                        <div class="parent-icon"><i class='bx bx-home-circle'></i>
+                        </div>
+                        <div class="menu-title">FAQ</div>
+                    </a>
+                </li>
             </ul>
         </div>
         <header>

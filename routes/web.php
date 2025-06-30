@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/persyaratan', [HomeController::class, 'persyaratan'])->name('persyaratan');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -34,4 +34,8 @@ class HomeController extends Controller
     {
         return view('home.persyaratan');
     }
+    public function faq()
+    {
+        return view('home.faq');
+    }
 }
