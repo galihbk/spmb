@@ -27,7 +27,9 @@
                         <h5 class="mb-0 text-primary">Form Pendaftaran Siswa Baru</h5>
                     </div>
                     <hr>
-                    <form class="row g-3" method="POST" action="{{ route('ppdb.submit') }}">
+                    <form class="row g-3" method="POST" action="{{ route('ppdb.submit') }}"
+                        enctype="multipart/form-data">
+
                         @csrf
 
                         <div class="col-md-6">
@@ -212,6 +214,77 @@
                                 class="form-control @error('nama_wali') is-invalid @enderror"
                                 value="{{ old('nama_wali') }}">
                             @error('nama_wali')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Pas Foto 3x4 (Background Merah)</label>
+                            <input type="file" name="foto"
+                                class="form-control @error('foto') is-invalid @enderror" required>
+                            @error('foto')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Ijazah SD</label>
+                            <input type="file" name="scan_ijazah"
+                                class="form-control @error('scan_ijazah') is-invalid @enderror" required>
+                            @error('scan_ijazah')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Kartu Keluarga</label>
+                            <input type="file" name="scan_kk"
+                                class="form-control @error('scan_kk') is-invalid @enderror" required>
+                            @error('scan_kk')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Biodata Raport SMP/MTs</label>
+                            <input type="file" name="scan_raport"
+                                class="form-control @error('scan_raport') is-invalid @enderror" required>
+                            @error('scan_raport')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan KTP Orang Tua Ayah</label>
+                            <input type="file" name="ktp_ayah"
+                                class="form-control @error('ktp_ayah') is-invalid @enderror" required>
+                            @error('ktp_ayah')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan KTP Orang Tua Ibu</label>
+                            <input type="file" name="ktp_ibu"
+                                class="form-control @error('ktp_ibu') is-invalid @enderror" required>
+                            @error('ktp_ibu')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan KIP/KIS atau Sejenisnya</label>
+                            <input type="file" name="scan_kip"
+                                class="form-control @error('scan_kip') is-invalid @enderror">
+                            @error('scan_kip')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Scan SKTM</label>
+                            <input type="file" name="scan_sktm"
+                                class="form-control @error('scan_sktm') is-invalid @enderror">
+                            @error('scan_sktm')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>

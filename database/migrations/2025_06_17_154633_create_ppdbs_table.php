@@ -29,10 +29,7 @@ return new class extends Migration
             $table->string('nama_ayah');
             $table->string('nama_ibu');
             $table->string('nama_wali')->nullable();
-
-            $table->date('jadwal_test')->nullable(); // tanggal ujian tes
-            $table->tinyInteger('hasil_test')->default(0); // 0 = belum test, 1 = lulus, 2 = tidak lulus
-            $table->boolean('status_daftar_ulang')->default(0); // 0 = belum, 1 = sudah
+            $table->boolean('status_daftar_ulang')->default(0);
 
             $table->timestamps();
         });
