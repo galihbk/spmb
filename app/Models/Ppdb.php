@@ -26,7 +26,6 @@ class Ppdb extends Model
         'nama_ibu',
         'nama_wali',
         'jadwal_test',
-        'hasil_test',
         'status_daftar_ulang',
     ];
 }

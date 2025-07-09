@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ppdb;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PpdbController extends Controller
-{
+{ 
     public function index()
     {
-        return view('ppdb.index');
+        $setting= Setting::first()?? (object)[
+        'status_pendaftaran' => 0
+    ];
+        return view('ppdb.index', compact('setting'));
     }
     public function store(Request $request)
     {
@@ -32,6 +36,14 @@ class PpdbController extends Controller
             'nama_ayah' => 'required|string|max:255',
             'nama_ibu' => 'required|string|max:255',
             'nama_wali' => 'nullable|string|max:255',
+            'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        'scan_ijazah' => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+        'scan_kk' => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+        'scan_raport' => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+        'ktp_ayah' => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+        'ktp_ibu' => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+        'scan_kip' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
+        'scan_sktm' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ];
 
         $messages = [
@@ -64,12 +76,34 @@ class PpdbController extends Controller
             'wa_ortu.regex' => 'Format nomor WhatsApp orang tua tidak valid (harus diawali 08 dan panjang 10-14 digit).',
             'nama_ayah.required' => 'Nama ayah wajib diisi.',
             'nama_ibu.required' => 'Nama ibu wajib diisi.',
+             'foto.required' => 'Pas foto wajib diunggah.',
+        'foto.image' => 'Pas foto harus berupa gambar.',
+        'foto.mimes' => 'Pas foto harus berformat JPG/PNG.',
+        'foto.max' => 'Ukuran maksimal pas foto 2MB.',
         ];
 
         $validated = $request->validate($rules, $messages);
 
         try {
             $validated['user_id'] = auth()->id();
+            // Upload file
+        $folder = 'dokumen-ppdb';
+
+        $validated['foto'] = $request->file('foto')->store($folder, 'public');
+        $validated['scan_ijazah'] = $request->file('scan_ijazah')->store($folder, 'public');
+        $validated['scan_kk'] = $request->file('scan_kk')->store($folder, 'public');
+        $validated['scan_raport'] = $request->file('scan_raport')->store($folder, 'public');
+        $validated['ktp_ayah'] = $request->file('ktp_ayah')->store($folder, 'public');
+        $validated['ktp_ibu'] = $request->file('ktp_ibu')->store($folder, 'public');
+
+        // Optional
+        if ($request->hasFile('scan_kip')) {
+            $validated['scan_kip'] = $request->file('scan_kip')->store($folder, 'public');
+        }
+
+        if ($request->hasFile('scan_sktm')) {
+            $validated['scan_sktm'] = $request->file('scan_sktm')->store($folder, 'public');
+        }
             Ppdb::create($validated);
             return redirect()->back()->with('success', 'Pendaftaran berhasil dikirim.');
         } catch (\Exception $e) {

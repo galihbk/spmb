@@ -64,7 +64,7 @@
                     <li>
                         <a href="{{ route('admin.pendaftar') }}">
                             <div class="parent-icon"><i class='bx bx-list-ol'></i></div>
-                            <div class="menu-title">Pendaftar</div>
+                            <div class="menu-title">Pendaftaran</div>
                         </a>
                     </li>
                 @else

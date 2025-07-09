@@ -13,13 +13,11 @@ class HomeController extends Controller
         $totalPendaftar = Ppdb::count();
 
         // Total yang sudah diterima dan sudah daftar ulang
-        $totalSudahDaftarUlang = Ppdb::where('hasil_test', 1)
-            ->where('status_daftar_ulang', 1)
+        $totalSudahDaftarUlang = Ppdb::where('status_daftar_ulang', 1)
             ->count();
 
         // Total yang sudah tes tapi belum selesai prosesnya
-        $totalBelumSelesai = Ppdb::where('hasil_test', '!=', 1)
-            ->where('status_daftar_ulang', '!=', 1)
+        $totalBelumSelesai = Ppdb::where('status_daftar_ulang', '!=', 1)
             ->whereNotNull('jadwal_test')
             ->count();
 

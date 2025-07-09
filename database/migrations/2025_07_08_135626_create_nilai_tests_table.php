@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nilai_tests', function (Blueprint $table) {
+          Schema::create('nilai_tests', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->float('wawancara');
+            $table->float('baca_tulis');
+            $table->float('btq');
+            $table->float('buta_warna');
+            $table->float('fisik');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

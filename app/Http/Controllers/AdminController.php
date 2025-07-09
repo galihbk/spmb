@@ -5,13 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Ppdb;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Setting;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+         $setting= Setting::first()?? (object)[
+        'status_pendaftaran' => 0
+    ];
+        return view('admin.index', compact('setting'));
     }
+    public function toggle(Request $request)
+{
+    $status = $request->input('status'); // status berupa 0 atau 1 dari AJAX
+
+    $setting = Setting::first();
+
+    if (!$setting) {
+        // Insert jika belum ada
+        $setting = new Setting();
+    }
+
+    $setting->status_pendaftaran = $status;
+    $setting->save();
+
+    return response()->json(['message' => 'Status berhasil diperbarui.']);
+}
     public function data(Request $request)
     {
         $query = Ppdb::where('status_daftar_ulang', 0)

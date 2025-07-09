@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/update-jadwal', [AdminController::class, 'updateJadwal'])->name('admin.update-jadwal');
     Route::put('/admin/update-hasil', [AdminController::class, 'updateHasil'])->name('admin.update-hasil');
     Route::put('/admin/update-daftarulang', [AdminController::class, 'updateDaftarUlang'])->name('admin.update-daftarulang');
+    Route::post('/setting/toggle', [AdminController::class, 'toggle'])->name('setting.toggle');
 });
 
 require __DIR__ . '/auth.php';

@@ -19,6 +19,21 @@
         @endphp
 
         @if (!$ppdb)
+        @if($setting && $setting->status_pendaftaran == 0)
+         <div class="card border-top border-0 border-4 border-primary">
+                <div class="card-body p-5">
+                    <div class="card-title d-flex align-items-center">
+                        <div><i class="bx bxs-user me-1 font-22 text-primary"></i>
+                        </div>
+                        <h5 class="mb-0 text-primary">Pendafataran Peserta Didik Baru</h5>
+                    </div>
+                    <hr>
+                    <div class="alert alert-info">
+                        Pendaftaran belum di buka, silahkan tunggu informasi selanjutnya!
+                    </div>
+                </div>
+            </div>
+        @elseif($setting && $setting->status_pendaftaran == 1)
             <div class="card border-top border-0 border-4 border-primary">
                 <div class="card-body p-5">
                     <div class="card-title d-flex align-items-center">
@@ -295,6 +310,8 @@
                     </form>
                 </div>
             </div>
+            
+            @endif
         @else
             <div class="card border-top border-0 border-4 border-primary">
                 <div class="card-body p-5">

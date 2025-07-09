@@ -6,6 +6,17 @@
                     <div><i class="bx bxs-user me-1 font-22 text-primary"></i>
                     </div>
                     <h5 class="mb-0 text-primary">List Pendaftar</h5>
+                    <div class="ms-auto">
+                        <div class="ms-auto">
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="toggleStatus"
+            {{ $setting && $setting->status_pendaftaran ? 'checked' : '' }}>
+        <label class="form-check-label" for="toggleStatus">
+            Pendaftaran <span id="statusText">{{ $setting && $setting->status_pendaftaran ? 'Dibuka' : 'Ditutup' }}</span>
+        </label>
+    </div>
+</div>
+                    </div>
                 </div>
                 <hr>
                 <table class="table table-bordered" id="pendaftar-table">
@@ -97,6 +108,25 @@
     </div>
     @push('scripts')
         <script>
+            $('#toggleStatus').on('change', function () {
+        let status = $(this).is(':checked') ? 1 : 0;
+
+        $.ajax({
+            url: '{{ route('setting.toggle') }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: status
+            },
+            success: function (response) {
+                $('#statusText').text(status ? 'Dibuka' : 'Ditutup');
+                console.log(response.message);
+            },
+            error: function () {
+                alert('Gagal mengubah status.');
+            }
+        });
+    });
             $('#modalJadwalTes').on('show.bs.modal', function(event) {
                 let button = $(event.relatedTarget);
                 $('#jadwal_id').val(button.data('id'));
