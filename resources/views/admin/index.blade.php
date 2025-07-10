@@ -19,7 +19,8 @@
                     </div>
                 </div>
                 <hr>
-                <table class="table table-bordered" id="pendaftar-table">
+                <div class="table-responsive">
+                <table class="table table-bordered" id="pendaftar-table" style="width: 100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -28,10 +29,12 @@
                             <th>Jadwal Tes</th>
                             <th>Hasil Tes</th>
                             <th>Daftar Ulang</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                 </table>
+                </div>
             </div>
         </div>
     </div>
@@ -68,12 +71,45 @@
                         <h5 class="modal-title">Update Hasil Tes</h5>
                     </div>
                     <div class="modal-body">
-                        <select name="hasil_test" id="hasil_test" class="form-select">
-                            <option value="0">Tidak Lulus</option>
-                            <option value="1">Lulus</option>
-                            <option value="2">Cadangan</option>
-                        </select>
+                        <table style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Keterangan</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Tes Wawancara</td>
+                            <td><input type="number" placeholder="1-100" name="wawancara" min="0" value="0" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Tes Baca Tulis</td>
+                            <td><input type="number" placeholder="1-100" name="baca_tulis" min="0" value="0" class="form-control"></td>
+                            
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Tes Baca Tulis Qur'an</td>
+                            <td><input type="number" placeholder="1-100" name="btq" min="0" value="0" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Tes Buta Warna</td>
+                            <td><input type="number" placeholder="1-100" name="buta_warna" min="0" value="0" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Tes Fisik</td>
+                            <td><input type="number" placeholder="1-100" name="fisik" min="0" value="0" class="form-control"></td>
+                        </tr>
+                    </tbody>
+                    </table>
                     </div>
+                    
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Simpan</button>
                     </div>
@@ -168,12 +204,16 @@
                             name: 'jadwal_test'
                         },
                         {
-                            data: 'hasil_test',
-                            name: 'hasil_test'
+                            data: 'nilai_test',
+                            name: 'nilai_test'
                         },
                         {
                             data: 'status_daftar_ulang',
                             name: 'status_daftar_ulang'
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
                         },
                         {
                             data: 'aksi',

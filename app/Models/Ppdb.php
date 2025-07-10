@@ -27,5 +27,22 @@ class Ppdb extends Model
         'nama_wali',
         'jadwal_test',
         'status_daftar_ulang',
+        'foto',
+        'scan_ijazah',
+        'scan_kk',
+        'scan_raport',
+        'ktp_ayah',
+        'ktp_ibu',
+        'scan_kip',
+        'scan_sktm',
     ];
+
+    public function NilaiTest()
+{
+    return $this->hasOne(NilaiTest::class, 'ppdb_id');
+}
+ public function hasilTes()
+{
+    return $this->hasOne(NilaiTest::class, 'ppdb_id');
+}
 }

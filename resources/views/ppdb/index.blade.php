@@ -15,7 +15,7 @@
         @endif
 
         @php
-            $ppdb = \App\Models\Ppdb::where('user_id', auth()->id())->first();
+            $ppdb = \App\Models\Ppdb::with('hasilTes')->where('user_id', auth()->id())->first();
         @endphp
 
         @if (!$ppdb)
@@ -313,6 +313,29 @@
             
             @endif
         @else
+        @php
+    $nilai = collect([
+        $ppdb->hasilTes->test ?? null,
+        $ppdb->hasilTes->wawancara ?? null,
+        $ppdb->hasilTes->baca_tulis ?? null,
+        $ppdb->hasilTes->btq ?? null,
+        $ppdb->hasilTes->buta_warna ?? null,
+        $ppdb->hasilTes->fisik ?? null,
+    ])->filter(fn($n) => $n !== null);
+
+    $rata2 = $nilai->isNotEmpty() ? $nilai->avg() : null;
+
+    // Tentukan jenis alert
+    if (is_null($ppdb->jadwal_test) || is_null($rata2)) {
+        $alertClass = 'alert-info';
+    } elseif ($rata2 <= 50) {
+        $alertClass = 'alert-danger';
+    } elseif ($rata2 > 50) {
+        $alertClass = $ppdb->status_daftar_ulang ? 'alert-success' : 'alert-warning';
+    } else {
+        $alertClass = 'alert-secondary';
+    }
+@endphp
             <div class="card border-top border-0 border-4 border-primary">
                 <div class="card-body p-5">
                     <div class="card-title d-flex align-items-center">
@@ -321,26 +344,77 @@
                         <h5 class="mb-0 text-primary">Status Pendaftaran</h5>
                     </div>
                     <hr>
-                    <div class="alert alert-info">
-                        @if (is_null($ppdb->jadwal_test))
-                            <strong>Status:</strong> Pendaftaran berhasil. Admin belum menetapkan jadwal tes. Silakan
-                            cek kembali nanti.
-                        @elseif ($ppdb->hasil_test == 0)
-                            <strong>Status:</strong> Jadwal tes:
-                            <strong>{{ \Carbon\Carbon::parse($ppdb->jadwal_test)->translatedFormat('d F Y') }}</strong><br>
-                            Hasil tes belum dinilai atau Anda belum mengikuti tes.
-                        @elseif ($ppdb->hasil_test == 1 && $ppdb->status_daftar_ulang == 0)
-                            <strong>Selamat!</strong> Anda <span class="text-success">dinyatakan diterima</span>.<br>
-                            Silakan melakukan <strong>daftar ulang</strong> di sekolah sesuai ketentuan yang berlaku.
-                        @elseif ($ppdb->hasil_test == 1 && $ppdb->status_daftar_ulang == 1)
-                            <strong>Selamat!</strong> Anda telah <span class="text-success">resmi diterima</span>
-                            sebagai siswa SMK.<br>
-                            Silakan menghubungi bagian pendaftaran sekolah untuk informasi lebih lanjut.
-                        @elseif ($ppdb->hasil_test == 2)
-                            <strong>Informasi:</strong> Saat ini Anda berada di status <strong>cadangan</strong>.
-                            Silakan tunggu pengumuman selanjutnya dari sekolah.
-                        @endif
-                    </div>
+                    <div class="alert {{ $alertClass }}">
+    @if (is_null($ppdb->jadwal_test))
+        <strong>Status:</strong> Pendaftaran berhasil. Admin belum menetapkan jadwal tes. Silakan cek kembali nanti.
+
+    @elseif (is_null($rata2))
+        <strong>Status:</strong> Jadwal tes:
+        <strong>{{ \Carbon\Carbon::parse($ppdb->jadwal_test)->translatedFormat('d F Y') }}</strong><br>
+        Hasil tes belum dinilai atau Anda belum mengikuti tes.
+
+    @elseif ($rata2 <= 50)
+        <strong>Mohon Maaf.</strong> Anda <span class="text-danger">tidak lulus seleksi</span> berdasarkan hasil tes.<br>
+        Terima kasih telah mengikuti seleksi penerimaan siswa baru.
+
+    @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 0)
+        <strong>Selamat!</strong> Anda <span class="text-success">dinyatakan lulus seleksi</span>.<br>
+        Silakan melakukan <strong>daftar ulang</strong> di sekolah sesuai ketentuan yang berlaku.
+
+    @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 1)
+        <strong>Selamat!</strong> Anda telah <span class="text-success">resmi diterima</span> sebagai siswa SMK.<br>
+        Silakan menghubungi bagian pendaftaran sekolah untuk informasi lebih lanjut.
+    @endif
+    @if (!is_null($rata2))
+    <div class="text-end mt-3">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalHasilTes">
+            <i class="bi bi-bar-chart"></i> Lihat Hasil Tes
+        </button>
+    </div>
+    @if (!is_null($rata2))
+<!-- Modal Hasil Tes -->
+<div class="modal fade" id="modalHasilTes" tabindex="-1" aria-labelledby="modalHasilTesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-md">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="modalHasilTesLabel">Detail Hasil Tes</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Jenis Tes</th>
+                            <th class="text-center">Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Wawancara</td><td class="text-center">{{ $ppdb->hasilTes->wawancara }}</td></tr>
+                        <tr><td>Baca Tulis</td><td class="text-center">{{ $ppdb->hasilTes->baca_tulis }}</td></tr>
+                        <tr><td>Baca Tulis Qur'an</td><td class="text-center">{{ $ppdb->hasilTes->btq }}</td></tr>
+                        <tr><td>Buta Warna</td><td class="text-center">{{ $ppdb->hasilTes->buta_warna }}</td></tr>
+                        <tr><td>Fisik</td><td class="text-center">{{ $ppdb->hasilTes->fisik }}</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-secondary">
+                            <th>Rata-rata</th>
+                            <th class="text-center">{{ number_format($rata2, 2) }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@endif
+</div>
+
+
                 </div>
             </div>
         @endif

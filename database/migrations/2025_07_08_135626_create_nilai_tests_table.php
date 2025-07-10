@@ -13,14 +13,14 @@ return new class extends Migration
     {
           Schema::create('nilai_tests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->float('wawancara');
-            $table->float('baca_tulis');
-            $table->float('btq');
-            $table->float('buta_warna');
-            $table->float('fisik');
+            $table->unsignedBigInteger('ppdb_id');
+            $table->float('wawancara')->default(0);
+            $table->float('baca_tulis')->default(0);
+            $table->float('btq')->default(0);
+            $table->float('buta_warna')->default(0);
+            $table->float('fisik')->default(0);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('ppdb_id')->references('id')->on('ppdbs')->onDelete('cascade');
         });
     }
 
