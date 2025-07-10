@@ -54,7 +54,7 @@
                 </li>
                 <li>
                     <a href="{{ route('persyaratan') }}">
-                        <div class="parent-icon"><i class='bx bx-home-circle'></i>
+                        <div class="parent-icon"><i class='bx bx-task'></i>
                         </div>
                         <div class="menu-title">Persyaratan</div>
                     </a>
@@ -96,7 +96,7 @@
                 @endauth
                 <li>
                     <a href="{{ route('faq') }}">
-                        <div class="parent-icon"><i class='bx bx-home-circle'></i>
+                        <div class="parent-icon"><i class='bx bx-question-mark'></i>
                         </div>
                         <div class="menu-title">FAQ</div>
                     </a>
