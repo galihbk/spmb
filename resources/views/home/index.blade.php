@@ -7,6 +7,9 @@
                         <div class="carousel-item active" style="height: 400px">
                             <img src="assets/images/banner ppdb.png" class="d-block w-100" alt="...">
                         </div>
+                        <div class="carousel-item" style="height: 400px">
+                            <img src="assets/images/banner ppdb 2.png" class="d-block w-100" alt="...">
+                        </div>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

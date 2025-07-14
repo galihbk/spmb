@@ -20,6 +20,7 @@ Route::post('/ppdb/{id}/upload-bukti', [PpdbController::class, 'uploadBukti'])->
     Route::get('/pendaftar', [AdminController::class, 'index'])->name('admin.pendaftar');
     Route::get('/admin/data', [AdminController::class, 'data'])->name('admin.data');
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::patch('/admin/ppdb/{id}', [AdminController::class, 'update'])->name('admin.ppdb.update');
     // Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
     Route::get('/admin/detail/{id}', [AdminController::class, 'show'])->name('admin.detail');
     Route::put('/admin/update-jadwal', [AdminController::class, 'updateJadwal'])->name('admin.update-jadwal');
