@@ -130,10 +130,20 @@
                         <h5 class="modal-title">Update Daftar Ulang</h5>
                     </div>
                     <div class="modal-body">
-                        <select name="status_daftar_ulang" id="status_daftar_ulang" class="form-select">
-                            <option value="0">Belum</option>
-                            <option value="1">Sudah</option>
-                        </select>
+                        <div class="mb-3" id="buktiContainer">
+    <label for="">Bukti Daftar Ulang:</label>
+    <br>
+    <a href="#" target="_blank" id="buktiLink" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-file-earmark-arrow-down"></i> Download Bukti
+    </a>
+</div>
+                        <div class="form-group">
+                            <label for="">Status Daftar Ulang</label>
+                            <select name="status_daftar_ulang" id="status_daftar_ulang" class="form-select">
+                                <option value="1">Terima</option>
+                                <option value="2">Tolak</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Simpan</button>
@@ -176,10 +186,19 @@
             });
 
             $('#modalDaftarUlang').on('show.bs.modal', function(event) {
-                let button = $(event.relatedTarget);
-                $('#daftar_id').val(button.data('id'));
-                $('#status_daftar_ulang').val(button.data('status'));
-            });
+    let button = $(event.relatedTarget);
+    let id = button.data('id');
+    let buktiUrl = button.data('bukti');
+    $('#daftar_id').val(id);
+
+    if (buktiUrl) {
+        $('#buktiContainer').show();
+        $('#buktiLink').attr('href', buktiUrl);
+    } else {
+        $('#buktiContainer').hide();
+        $('#buktiLink').attr('href', '#');
+    }
+});
             $(function() {
                 $('#pendaftar-table').DataTable({
                     processing: true,

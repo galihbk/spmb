@@ -5,13 +5,7 @@
                 <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 400px">
-                            <img src="assets/images/gallery/29.png" class="d-block w-100" alt="...">
-                        </div>
-                        <div class="carousel-item" style="height: 400px">
-                            <img src="assets/images/gallery/30.png" class="d-block w-100" alt="...">
-                        </div>
-                        <div class="carousel-item" style="height: 400px">
-                            <img src="assets/images/gallery/31.png" class="d-block w-100" alt="...">
+                            <img src="assets/images/banner ppdb.png" class="d-block w-100" alt="...">
                         </div>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-bs-slide="prev">

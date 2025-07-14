@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('scan_sktm')->nullable();
             $table->dateTime('jadwal_test')->nullable();
             $table->boolean('status_daftar_ulang')->default(0);
+            $table->boolean('bukti_daftar_ulang')->default(0);
             $table->timestamps();
         });
     }

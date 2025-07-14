@@ -6,6 +6,7 @@ use App\Models\Ppdb;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PpdbController extends Controller
 { 
@@ -82,7 +83,7 @@ class PpdbController extends Controller
             'foto.max' => 'Ukuran maksimal pas foto 2MB.',
             'scan_ijazah.required' => 'Pas foto wajib diunggah.',
             'scan_ijazah.image' => 'Pas foto harus berupa gambar.',
-            'scan_ijazah.mimes' => 'Pas foto harus berformat JPG/PNG.',
+            'scan_ijazah.mimes' => 'Pas foto harus berformat JPG/PNG/PDF.',
             'scan_ijazah.max' => 'Ukuran maksimal pas foto 2MB.',
             'scan_kk.required' => 'Pas foto wajib diunggah.',
             'scan_kk.image' => 'Pas foto harus berupa gambar.',
@@ -90,15 +91,15 @@ class PpdbController extends Controller
             'scan_kk.max' => 'Ukuran maksimal pas foto 2MB.',
             'scan_raport.required' => 'Pas foto wajib diunggah.',
             'scan_raport.image' => 'Pas foto harus berupa gambar.',
-            'scan_raport.mimes' => 'Pas foto harus berformat JPG/PNG.',
+            'scan_raport.mimes' => 'Pas foto harus berformat JPG/PNG/PDF.',
             'scan_raport.max' => 'Ukuran maksimal pas foto 2MB.',
             'ktp_ayah.required' => 'Pas foto wajib diunggah.',
             'ktp_ayah.image' => 'Pas foto harus berupa gambar.',
-            'ktp_ayah.mimes' => 'Pas foto harus berformat JPG/PNG.',
+            'ktp_ayah.mimes' => 'Pas foto harus berformat JPG/PNG/PDF.',
             'ktp_ayah.max' => 'Ukuran maksimal pas foto 2MB.',
             'ktp_ibu.required' => 'Pas foto wajib diunggah.',
             'ktp_ibu.image' => 'Pas foto harus berupa gambar.',
-            'ktp_ibu.mimes' => 'Pas foto harus berformat JPG/PNG.',
+            'ktp_ibu.mimes' => 'Pas foto harus berformat JPG/PNG/PDF.',
             'ktp_ibu.max' => 'Ukuran maksimal pas foto 2MB.',
         ];
 
@@ -130,5 +131,25 @@ class PpdbController extends Controller
             Log::error('Gagal menyimpan data PPDB: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
+    }
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_daftar_ulang' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ]);
+
+        $ppdb = Ppdb::findOrFail($id);
+
+        if ($ppdb->bukti_daftar_ulang && Storage::exists($ppdb->bukti_daftar_ulang)) {
+            Storage::delete($ppdb->bukti_daftar_ulang);
+        }
+
+        $path = $request->file('bukti_daftar_ulang')->store('bukti-daftar-ulang', 'public');
+
+        $ppdb->bukti_daftar_ulang = $path;
+        $ppdb->status_daftar_ulang = 3; 
+        $ppdb->save();
+
+        return redirect()->back()->with('success', 'Bukti daftar ulang berhasil diupload. Silakan tunggu verifikasi dari admin.');
     }
 }

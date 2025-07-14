@@ -35,8 +35,8 @@ class Ppdb extends Model
         'ktp_ibu',
         'scan_kip',
         'scan_sktm',
+        'bukti_daftar_ulang',
     ];
-
     public function NilaiTest()
 {
     return $this->hasOne(NilaiTest::class, 'ppdb_id');

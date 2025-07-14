@@ -7,6 +7,7 @@ use App\Models\Ppdb;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -35,8 +36,7 @@ class AdminController extends Controller
 }
     public function data(Request $request)
     {
-        $query = Ppdb::where('status_daftar_ulang', 0)
-            ->leftJoin('nilai_tests', 'ppdbs.id', '=', 'nilai_tests.ppdb_id')
+        $query = Ppdb::leftJoin('nilai_tests', 'ppdbs.id', '=', 'nilai_tests.ppdb_id')
         ->orderByRaw('jadwal_test IS NOT NULL')
         ->select([
             'ppdbs.id',
@@ -44,6 +44,7 @@ class AdminController extends Controller
             'ppdbs.jurusan',
             'ppdbs.jadwal_test',
             'ppdbs.status_daftar_ulang',
+            'ppdbs.bukti_daftar_ulang',
             'nilai_tests.wawancara',
             'nilai_tests.baca_tulis',
             'nilai_tests.btq',
@@ -85,12 +86,15 @@ class AdminController extends Controller
                 return '<span class="badge bg-danger text-dark">Tidak Lulus</span>';
             }
         })
-            ->editColumn(
-                'status_daftar_ulang',
-                fn($row) => $row->status_daftar_ulang
-                    ? '<span class="badge bg-success">Sudah</span>'
-                    : '<span class="badge bg-danger">Belum</span>'
-            )
+            ->editColumn('status_daftar_ulang', function ($row) {
+    return match ((int)$row->status_daftar_ulang) {
+        0 => '<span class="badge bg-warning text-dark">Belum Upload</span>',
+        1 => '<span class="badge bg-success">Diterima</span>',
+        2 => '<span class="badge bg-danger">Ditolak</span>',
+        3 => '<span class="badge bg-info text-dark">Menunggu Verifikasi</span>',
+        default => '<span class="badge bg-secondary">Tidak Diketahui</span>',
+    };
+})
 ->addColumn('status', function ($row) {
     $nilai = collect([
         $row->test,
@@ -107,19 +111,19 @@ class AdminController extends Controller
 
     $rata2 = $nilai->avg();
 
-    // Langsung nyatakan ditolak jika rata-rata ≤ 50
     if ($rata2 <= 50) {
         return '<span class="badge bg-danger">Ditolak</span>';
     }
 
-    // Jika belum daftar ulang, tetap belum selesai
-    if ($row->status_daftar_ulang == 0) {
-        return '<span class="badge bg-warning text-dark">Belum Selesai</span>';
-    }
-
-    // Lulus jika nilai bagus dan sudah daftar ulang
-    return '<span class="badge bg-success">Lulus</span>';
+    return match ((int) $row->status_daftar_ulang) {
+        0 => '<span class="badge bg-warning text-dark">Belum Daftar Ulang</span>',
+        3 => '<span class="badge bg-info text-dark">Menunggu Verifikasi</span>',
+        2 => '<span class="badge bg-danger">Bukti Ditolak</span>',
+        1 => '<span class="badge bg-success">Lulus</span>',
+        default => '<span class="badge bg-secondary">Status Tidak Dikenal</span>',
+    };
 })
+
 
             ->addColumn('aksi', function ($row) {
                 $id = $row->id;
@@ -133,7 +137,17 @@ class AdminController extends Controller
                         <li><a class="dropdown-item" href="' . route('admin.detail', $id) . '">Detail</a></li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalJadwalTes" data-id="' . $id . '" data-jadwal="' . $row->jadwal_test . '">Update Jadwal Tes</a></li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalHasilTes" data-id="' . $id . '" data-hasil="">Update Hasil Tes</a></li>
-                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalDaftarUlang" data-id="' . $id . '" data-status="' . $row->status_daftar_ulang . '">Update Daftar Ulang</a></li>
+                        <li>
+  <a class="dropdown-item"
+     href="#"
+     data-bs-toggle="modal"
+     data-bs-target="#modalDaftarUlang"
+     data-id="' . $id . '"
+     data-status="' . $row->status_daftar_ulang . '"
+     data-bukti="' . ($row->bukti_daftar_ulang ? Storage::url($row->bukti_daftar_ulang) : '') . '">
+     Update Daftar Ulang
+  </a>
+</li>
                     </ul>
                 </div>';
             })

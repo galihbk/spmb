@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/ppdb', [PpdbController::class, 'index'])->name('form-ppdb');
+Route::post('/ppdb/{id}/upload-bukti', [PpdbController::class, 'uploadBukti'])->name('ppdb.uploadBukti');
     Route::post('/store', [PpdbController::class, 'store'])->name('ppdb.submit');
     Route::get('/pendaftar', [AdminController::class, 'index'])->name('admin.pendaftar');
     Route::get('/admin/data', [AdminController::class, 'data'])->name('admin.data');

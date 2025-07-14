@@ -13,6 +13,5 @@ class NilaiTest extends Model
         'btq',
         'buta_warna',
         'fisik',
-    ];
-   
+     ];
 }

@@ -313,28 +313,27 @@
             
             @endif
         @else
-        @php
-    $nilai = collect([
-        $ppdb->hasilTes->test ?? null,
-        $ppdb->hasilTes->wawancara ?? null,
-        $ppdb->hasilTes->baca_tulis ?? null,
-        $ppdb->hasilTes->btq ?? null,
-        $ppdb->hasilTes->buta_warna ?? null,
-        $ppdb->hasilTes->fisik ?? null,
-    ])->filter(fn($n) => $n !== null);
+@php
+$nilai = collect([
+    $ppdb->hasilTes->test ?? null,
+    $ppdb->hasilTes->wawancara ?? null,
+    $ppdb->hasilTes->baca_tulis ?? null,
+    $ppdb->hasilTes->btq ?? null,
+    $ppdb->hasilTes->buta_warna ?? null,
+    $ppdb->hasilTes->fisik ?? null,
+])->filter(fn($n) => $n !== null);
 
-    $rata2 = $nilai->isNotEmpty() ? $nilai->avg() : null;
+$rata2 = $nilai->isNotEmpty() ? $nilai->avg() : null;
 
-    // Tentukan jenis alert
-    if (is_null($ppdb->jadwal_test) || is_null($rata2)) {
-        $alertClass = 'alert-info';
-    } elseif ($rata2 <= 50) {
-        $alertClass = 'alert-danger';
-    } elseif ($rata2 > 50) {
-        $alertClass = $ppdb->status_daftar_ulang ? 'alert-success' : 'alert-warning';
-    } else {
-        $alertClass = 'alert-secondary';
-    }
+if (is_null($ppdb->jadwal_test) || is_null($rata2)) {
+    $alertClass = 'alert-info';
+} elseif ($rata2 <= 50) {
+    $alertClass = 'alert-danger';
+} elseif ($rata2 > 50) {
+    $alertClass = in_array($ppdb->status_daftar_ulang, [1]) ? 'alert-success' : 'alert-warning';
+} else {
+    $alertClass = 'alert-secondary';
+}
 @endphp
             <div class="card border-top border-0 border-4 border-primary">
                 <div class="card-body p-5">
@@ -346,31 +345,45 @@
                     <hr>
                     <div class="alert {{ $alertClass }}">
     @if (is_null($ppdb->jadwal_test))
-        <strong>Status:</strong> Pendaftaran berhasil. Admin belum menetapkan jadwal tes. Silakan cek kembali nanti.
+                <strong>Status:</strong> Pendaftaran berhasil. Admin belum menetapkan jadwal tes. Silakan cek kembali nanti.
+            @elseif (is_null($rata2))
+                <strong>Status:</strong> Jadwal tes:
+                <strong>{{ \Carbon\Carbon::parse($ppdb->jadwal_test)->translatedFormat('d F Y') }}</strong><br>
+                Hasil tes belum dinilai atau Anda belum mengikuti tes.
+            @elseif ($rata2 <= 50)
+                <strong>Mohon Maaf.</strong> Anda <span class="text-danger">tidak lulus seleksi</span> berdasarkan hasil tes.<br>
+                Terima kasih telah mengikuti seleksi penerimaan siswa baru.
+            @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 0)
+                <strong>Selamat!</strong> Anda <span class="text-success">dinyatakan lulus seleksi</span>.<br>
+                Silakan melakukan <strong>daftar ulang</strong> lalu kirimkan bukti daftar ulang melalui tombol di bawah ini. Daftar ulang memerlukan validasi, cek secara berkala untuk melihat status daftar ulang.
+            @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 3)
+                <strong>Selamat!</strong> Anda telah mengirim bukti daftar ulang.<br>
+                <span class="text-info">Bukti daftar ulang sedang dalam proses verifikasi oleh admin.</span>
+            @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 2)
+                <strong>Mohon Perhatian!</strong><br>
+                <span class="text-danger">Bukti daftar ulang Anda ditolak.</span><br>
+                Silakan upload ulang bukti daftar ulang yang valid melalui tombol di bawah ini.
+            @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 1)
+                <strong>Selamat!</strong> Anda telah <span class="text-success">resmi diterima</span> sebagai siswa SMK.<br>
+                Silakan menghubungi bagian pendaftaran sekolah untuk informasi lebih lanjut.
+            @endif
+            <div class="d-flex">
 
-    @elseif (is_null($rata2))
-        <strong>Status:</strong> Jadwal tes:
-        <strong>{{ \Carbon\Carbon::parse($ppdb->jadwal_test)->translatedFormat('d F Y') }}</strong><br>
-        Hasil tes belum dinilai atau Anda belum mengikuti tes.
-
-    @elseif ($rata2 <= 50)
-        <strong>Mohon Maaf.</strong> Anda <span class="text-danger">tidak lulus seleksi</span> berdasarkan hasil tes.<br>
-        Terima kasih telah mengikuti seleksi penerimaan siswa baru.
-
-    @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 0)
-        <strong>Selamat!</strong> Anda <span class="text-success">dinyatakan lulus seleksi</span>.<br>
-        Silakan melakukan <strong>daftar ulang</strong> di sekolah sesuai ketentuan yang berlaku.
-
-    @elseif ($rata2 > 50 && $ppdb->status_daftar_ulang == 1)
-        <strong>Selamat!</strong> Anda telah <span class="text-success">resmi diterima</span> sebagai siswa SMK.<br>
-        Silakan menghubungi bagian pendaftaran sekolah untuk informasi lebih lanjut.
-    @endif
+         
+            @if ($rata2 > 50 && in_array($ppdb->status_daftar_ulang, [0, 2]))
+                <div class="text-end mt-3 me-3">
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUploadBukti">
+                        <i class="bi bi-upload"></i> Upload Bukti Daftar Ulang
+                    </button>
+                </div>
+            @endif
     @if (!is_null($rata2))
     <div class="text-end mt-3">
-        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalHasilTes">
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalHasilTes">
             <i class="bi bi-bar-chart"></i> Lihat Hasil Tes
         </button>
     </div>
+       </div>
     @if (!is_null($rata2))
 <!-- Modal Hasil Tes -->
 <div class="modal fade" id="modalHasilTes" tabindex="-1" aria-labelledby="modalHasilTesLabel" aria-hidden="true">
@@ -380,7 +393,7 @@
                 <h5 class="modal-title" id="modalHasilTesLabel">Detail Hasil Tes</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="printArea">
                 <table class="table table-bordered mb-0">
                     <thead class="table-light">
                         <tr>
@@ -404,6 +417,8 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printHasilTes()">Cetak
+    </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -413,10 +428,58 @@
 
 @endif
 </div>
+<div class="modal fade" id="modalUploadBukti" tabindex="-1" aria-labelledby="modalUploadBuktiLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('ppdb.uploadBukti', $ppdb->id) }}" method="POST" enctype="multipart/form-data" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalUploadBuktiLabel">Upload Bukti Daftar Ulang</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="bukti_daftar_ulang" class="form-label">Pilih File (PDF/JPG/PNG)</label>
+                    <input type="file" class="form-control" id="bukti_daftar_ulang" name="bukti_daftar_ulang" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Kirim</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 
                 </div>
             </div>
         @endif
     </div>
+    <script>
+    function printHasilTes() {
+        let printContents = document.getElementById('printArea').innerHTML;
+        let originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = `
+            <html>
+            <head>
+                <title>Hasil Tes</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+                    th { background-color: #f8f8f8; }
+                </style>
+            </head>
+            <body>
+                <h2>Hasil Tes Calon Siswa</h2>
+                ${printContents}
+            </body>
+            </html>
+        `;
+
+        window.print();
+        location.reload();
+    }
+</script>
+
 </x-guest-layout>
