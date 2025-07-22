@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -15,11 +16,24 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/ppdb', [PpdbController::class, 'index'])->name('form-ppdb');
-Route::post('/ppdb/{id}/upload-bukti', [PpdbController::class, 'uploadBukti'])->name('ppdb.uploadBukti');
+    Route::post('/ppdb/{id}/upload-bukti', [PpdbController::class, 'uploadBukti'])->name('ppdb.uploadBukti');
     Route::post('/store', [PpdbController::class, 'store'])->name('ppdb.submit');
     Route::get('/pendaftar', [AdminController::class, 'index'])->name('admin.pendaftar');
     Route::get('/admin/data', [AdminController::class, 'data'])->name('admin.data');
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::post('/persyaratan', [HomeController::class, 'storePersyaratan']);
+    Route::post('/persyaratan', [HomeController::class, 'storePersyaratan']);
+    Route::put('/persyaratan/{id}', [HomeController::class, 'updatePersyaratan']);
+    Route::delete('/persyaratan/{id}', [HomeController::class, 'destroyPersyaratan']);
+
+    Route::post('banners', [HomeController::class, 'storeBanner'])->name('banners.store');
+    Route::put('banners/{id}', [HomeController::class, 'updateBanner'])->name('banners.update');
+    Route::delete('banners/{id}', [HomeController::class, 'destroyBanner'])->name('banners.destroy');
+
+    Route::post('/faq', [HomeController::class, 'storeFaq']);
+    Route::put('/faq/{id}', [HomeController::class, 'updateFaq']);
+    Route::delete('/faq/{id}', [HomeController::class, 'destroyFaq']);
+
     Route::patch('/admin/ppdb/{id}', [AdminController::class, 'update'])->name('admin.ppdb.update');
     // Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
     Route::get('/admin/detail/{id}', [AdminController::class, 'show'])->name('admin.detail');
