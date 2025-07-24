@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PpdbController extends Controller
-{ 
+{
     public function index()
     {
-        $setting= Setting::first()?? (object)[
-        'status_pendaftaran' => 0
-    ];
+        $setting = Setting::first() ?? (object)[
+            'status_pendaftaran' => 0
+        ];
         return view('ppdb.index', compact('setting'));
     }
     public function store(Request $request)
@@ -108,23 +108,23 @@ class PpdbController extends Controller
         try {
             $validated['user_id'] = auth()->id();
             // Upload file
-        $folder = 'dokumen-ppdb';
+            $folder = 'dokumen-ppdb';
 
-        $validated['foto'] = $request->file('foto')->store($folder, 'public');
-        $validated['scan_ijazah'] = $request->file('scan_ijazah')->store($folder, 'public');
-        $validated['scan_kk'] = $request->file('scan_kk')->store($folder, 'public');
-        $validated['scan_raport'] = $request->file('scan_raport')->store($folder, 'public');
-        $validated['ktp_ayah'] = $request->file('ktp_ayah')->store($folder, 'public');
-        $validated['ktp_ibu'] = $request->file('ktp_ibu')->store($folder, 'public');
+            $validated['foto'] = $request->file('foto')->store($folder, 'public');
+            $validated['scan_ijazah'] = $request->file('scan_ijazah')->store($folder, 'public');
+            $validated['scan_kk'] = $request->file('scan_kk')->store($folder, 'public');
+            $validated['scan_raport'] = $request->file('scan_raport')->store($folder, 'public');
+            $validated['ktp_ayah'] = $request->file('ktp_ayah')->store($folder, 'public');
+            $validated['ktp_ibu'] = $request->file('ktp_ibu')->store($folder, 'public');
 
-        // Optional
-        if ($request->hasFile('scan_kip')) {
-            $validated['scan_kip'] = $request->file('scan_kip')->store($folder, 'public');
-        }
+            // Optional
+            if ($request->hasFile('scan_kip')) {
+                $validated['scan_kip'] = $request->file('scan_kip')->store($folder, 'public');
+            }
 
-        if ($request->hasFile('scan_sktm')) {
-            $validated['scan_sktm'] = $request->file('scan_sktm')->store($folder, 'public');
-        }
+            if ($request->hasFile('scan_sktm')) {
+                $validated['scan_sktm'] = $request->file('scan_sktm')->store($folder, 'public');
+            }
             Ppdb::create($validated);
             return redirect()->back()->with('success', 'Pendaftaran berhasil dikirim.');
         } catch (\Exception $e) {
@@ -147,7 +147,7 @@ class PpdbController extends Controller
         $path = $request->file('bukti_daftar_ulang')->store('bukti-daftar-ulang', 'public');
 
         $ppdb->bukti_daftar_ulang = $path;
-        $ppdb->status_daftar_ulang = 3; 
+        $ppdb->status_daftar_ulang = 3;
         $ppdb->save();
 
         return redirect()->back()->with('success', 'Bukti daftar ulang berhasil diupload. Silakan tunggu verifikasi dari admin.');

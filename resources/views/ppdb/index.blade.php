@@ -368,8 +368,11 @@ if (is_null($ppdb->jadwal_test) || is_null($rata2)) {
                 Silakan menghubungi bagian pendaftaran sekolah untuk informasi lebih lanjut.
             @endif
             <div class="d-flex">
-
-         
+                <div class="text-end mt-3 me-3">
+                    <a class="btn btn-secondary btn-sm" href="{{route('admin.detail', $ppdb->id) }}">
+                        <i class="bi bi-upload"></i> Detail Data
+                    </a>
+                </div>
             @if ($rata2 > 50 && in_array($ppdb->status_daftar_ulang, [0, 2]))
                 <div class="text-end mt-3 me-3">
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUploadBukti">

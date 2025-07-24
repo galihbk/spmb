@@ -16,12 +16,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/ppdb', [PpdbController::class, 'index'])->name('form-ppdb');
+    Route::get('/add/data', [AdminController::class, 'addData'])->name('admin.form-ppdb');
+
     Route::post('/ppdb/{id}/upload-bukti', [PpdbController::class, 'uploadBukti'])->name('ppdb.uploadBukti');
+
     Route::post('/store', [PpdbController::class, 'store'])->name('ppdb.submit');
     Route::get('/pendaftar', [AdminController::class, 'index'])->name('admin.pendaftar');
     Route::get('/admin/data', [AdminController::class, 'data'])->name('admin.data');
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::post('/persyaratan', [HomeController::class, 'storePersyaratan']);
+    Route::post('/store/data', [AdminController::class, 'storeData'])->name('store.data');
     Route::post('/persyaratan', [HomeController::class, 'storePersyaratan']);
     Route::put('/persyaratan/{id}', [HomeController::class, 'updatePersyaratan']);
     Route::delete('/persyaratan/{id}', [HomeController::class, 'destroyPersyaratan']);
@@ -36,10 +40,11 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/admin/ppdb/{id}', [AdminController::class, 'update'])->name('admin.ppdb.update');
     // Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
-    Route::get('/admin/detail/{id}', [AdminController::class, 'show'])->name('admin.detail');
+    Route::get('/ppdb/detail/{id}', [AdminController::class, 'show'])->name('admin.detail');
     Route::put('/admin/update-jadwal', [AdminController::class, 'updateJadwal'])->name('admin.update-jadwal');
     Route::put('/admin/update-hasil', [AdminController::class, 'updateHasil'])->name('admin.update-hasil');
     Route::put('/admin/update-daftarulang', [AdminController::class, 'updateDaftarUlang'])->name('admin.update-daftarulang');
+
     Route::post('/setting/toggle', [AdminController::class, 'toggle'])->name('setting.toggle');
 });
 
