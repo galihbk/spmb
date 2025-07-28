@@ -30,7 +30,7 @@ class AdminController extends Controller
     {
         $rules = [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
             'jurusan' => 'required|in:DPB,TKJ,TBSM',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
@@ -171,6 +171,7 @@ class AdminController extends Controller
             ->select([
                 'ppdbs.id',
                 'ppdbs.nama',
+                'ppdbs.wa',
                 'ppdbs.jurusan',
                 'ppdbs.jadwal_test',
                 'ppdbs.status_daftar_ulang',
@@ -278,6 +279,9 @@ class AdminController extends Controller
      Update Daftar Ulang
   </a>
   <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalUploadBukti" data-id="' . $id . '" data-hasil="">Upload Daftar Ulang</a></li>
+                         <li>
+ <li><a class="dropdown-item" href="https://wa.me/62' . ltrim($row->wa, '0') . '" target="_blank">Kirim Pesan</a></li>
+
                          <li>
                     <form action="' . route('admin.route.hapus', $id) . '" method="POST" onsubmit="return confirm(\'Yakin ingin menghapus data ini?\')">
                         <input type="hidden" name="_token" value="' . $csrf . '">
