@@ -80,7 +80,7 @@ class HomeController extends Controller
     {
         $request->validate(['nama' => 'required|string']);
         $item = Persyaratan::findOrFail($id);
-        $item->update(['nama' => $request->nama]);
+        $item->update(['persyaratan' => $request->nama]);
         return response()->json($item);
     }
     public function faq()

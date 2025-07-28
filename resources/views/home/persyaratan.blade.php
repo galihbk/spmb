@@ -8,34 +8,34 @@
                 Untuk calon pendaftar harap menyiapkan dokumen yang dibutuhkan, dan dibawa saat melakukan test:
                 <ul id="persyaratan-list">
                     @foreach ($data as $item)
-                        <li data-id="{{ $item->id }}">
-                            <span class="text">{{ $item->persyaratan }}</span>
-                            <input type="text" class="edit-input form-control d-none" value="{{ $item->persyaratan }}">
+                    <li data-id="{{ $item->id }}">
+                        <span class="text">{{ $item->persyaratan }}</span>
+                        <input type="text" class="edit-input form-control d-none" value="{{ $item->persyaratan }}">
 
-                            @if (auth()->user() && auth()->user()->role === 'admin')
-                                <button class="btn btn-sm btn-warning btn-edit">Edit</button>
-                                <button class="btn btn-sm btn-success btn-update d-none">Simpan</button>
-                                <button class="btn btn-sm btn-danger btn-hapus">Hapus</button>
-                            @endif
-                        </li>
+                        @if (auth()->user() && auth()->user()->role === 'admin')
+                        <button class="btn btn-sm btn-warning btn-edit">Edit</button>
+                        <button class="btn btn-sm btn-success btn-update d-none">Simpan</button>
+                        <button class="btn btn-sm btn-danger btn-hapus">Hapus</button>
+                        @endif
+                    </li>
                     @endforeach
 
                 </ul>
 
                 @if (auth()->user() && auth()->user()->role === 'admin')
-                    <div class="mt-3">
-                        <input type="text" id="input-persyaratan" class="form-control d-inline-block"
-                            style="width: 70%;" placeholder="Tambah persyaratan baru">
-                        <button id="btn-tambah" class="btn btn-primary">Tambah</button>
-                    </div>
+                <div class="mt-3">
+                    <input type="text" id="input-persyaratan" class="form-control d-inline-block" style="width: 70%;"
+                        placeholder="Tambah persyaratan baru">
+                    <button id="btn-tambah" class="btn btn-primary">Tambah</button>
+                </div>
                 @endif
             </div>
         </div>
     </div>
 
     @push('scripts')
-        <script>
-            $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
                 // Tambah
                 $('#btn-tambah').click(function() {
                     let nama = $('#input-persyaratan').val().trim();
@@ -98,7 +98,7 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(res) {
-                            li.find('.text').text(res.nama).removeClass('d-none');
+                            li.find('.text').text(res.persyaratan).removeClass('d-none');
                             li.find('.edit-input').addClass('d-none');
                             li.find('.btn-edit').removeClass('d-none');
                             li.find('.btn-update').addClass('d-none');
@@ -106,6 +106,6 @@
                     });
                 });
             });
-        </script>
+    </script>
     @endpush
 </x-guest-layout>
