@@ -257,7 +257,7 @@ class AdminController extends Controller
 
             ->addColumn('aksi', function ($row) {
                 $id = $row->id;
-
+                $csrf = csrf_token();
                 return '
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
@@ -278,8 +278,13 @@ class AdminController extends Controller
      Update Daftar Ulang
   </a>
   <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalUploadBukti" data-id="' . $id . '" data-hasil="">Upload Daftar Ulang</a></li>
-                        <li>
-</li>
+                         <li>
+                    <form action="' . route('admin.route.hapus', $id) . '" method="POST" onsubmit="return confirm(\'Yakin ingin menghapus data ini?\')">
+                        <input type="hidden" name="_token" value="' . $csrf . '">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                    </form>
+                </li>
                     </ul>
                 </div>';
             })
@@ -432,5 +437,11 @@ class AdminController extends Controller
             Log::error('Gagal update PPDB: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data.');
         }
+    }
+    public function destroy($id)
+    {
+        NilaiTest::where('ppdb_id', $id)->delete();
+        Ppdb::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 }

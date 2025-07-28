@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/update-daftarulang', [AdminController::class, 'updateDaftarUlang'])->name('admin.update-daftarulang');
 
     Route::post('/setting/toggle', [AdminController::class, 'toggle'])->name('setting.toggle');
+    Route::delete('/data/{id}/hapus', [AdminController::class, 'destroy'])->name('admin.route.hapus');
 });
 
 require __DIR__ . '/auth.php';
